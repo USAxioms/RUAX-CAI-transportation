@@ -1,37 +1,95 @@
-# RUAX- CAI Transportstion Rail Sentinel
+# RUAX-CAI Transportation Rail Sentinell
 
-**Author:** Michael Aaron Russell
-**ORCID:** [0009-0001-3360-6709]
+Deterministic fixed-point safety-monitoring and decision logic for transportation systems, written in Python with no external dependencies. The first module, **WAD18 Rail Sentinel**, covers rail braking and control.
 
-Engineered by Michael Aaron Russell, the WAD18 Rail Sentinel represents a state-of-the-art, zero-drift constitutional axiomatic intelligence framework purpose-built for the rigorous governance of mission-critical transit networks and high-speed rail systems. By establishing formal mathematical invariants and enforcing absolute computational determinism, this framework sets a new benchmark for safety-critical infrastructure.
+**Author:** Michael Aaron Russell ([ORCID 0009-0001-3360-6709](https://orcid.org/0009-0001-3360-6709))
+**Status:** Research prototype. Not certified or approved for use in operational transportation systems. See [Status and Limitations](#status-and-limitations).
 
-## Architectural Overview and Theoretical Foundation
+## Overview
 
-Traditional transit control systems rely heavily on floating-point arithmetic, which inherently introduces calculation drift, rounding errors, and non-deterministic behavior over extended operational cycles. The WAD18 Rail Sentinel completely eliminates this fundamental vulnerability by utilizing $10^{18}$ WAD fixed-point integer arithmetic[span_3](start_span)[span_3](end_span). This design guarantees bit-exact, fully reproducible, deterministic, and verifiable braking and control decisions across every single physical and digital operational node[span_4](start_span)[span_4](end_span).
+Floating-point arithmetic can give results that differ across platforms, compilers, and operation orderings. RUAX-CAI Transportation does all calculations in integer fixed-point arithmetic scaled by 10^18 (WAD), so the same inputs produce the same outputs on every node. Each decision is checked against explicit safety invariants and written to a hash-chained ledger for audit.
 
-The architecture integrates constitutional safety laws directly into the execution flow, ensuring that system capabilities expand in strict lockstep with verified safety bounds.
+## Architecture
 
 ```mermaid
 graph TD
-    A[Incoming Sensor Data & Telemetry] --> B[WAD18 Fixed-Point Engine wad18.py]
-    B --> C[Russell Recursive Refinement r3.py]
-    C --> D{Safety Invariant Validation}
-    D -->|Verified Invariant| E[Braking Control braking.py]
-    D -->|Drift / Violation Detected| F[Immediate Immutable Halt / Fault State]
-    E --> G[Ledger Verification ledger.py]
+    A[Sensor data and telemetry] --> B[wad18.py: fixed-point engine]
+    B --> C[r3.py: recursive refinement]
+    C --> D{Invariant validation}
+    D -->|Pass| E[braking.py: braking control]
+    D -->|Violation| F[Fault state / halt]
+    E --> G[ledger.py: ledger]
     F --> G
-    G --> H[Cryptographically Audited State Log]
+    G --> H[Hash-chained audit log]
+```
 
-Core Component Specification
-The repository is modularized into distinct, zero-dependency subsystems designed to operate securely within air-gapped or sovereign execution environments:
- * Fixed-Point Engine (wad18.py): Provides high-precision integer arithmetic designed to eradicate calculation drift, ensuring absolute mathematical determinism for all calculations.
- * Recursive Refinement (r3.py): Executes formal symbolic logic validation and automated safety invariant checking to continuously verify system integrity and state compliance.
- * Ledger Verification (ledger.py): Maintains cryptographically audited, immutable transaction and state logs to ensure complete operational accountability and transparent audit trails.
- * Braking Control (braking.py): Implements hard-coded operational boundaries and real-time safety enforcement routines to govern physical transit actuators safely under all operating conditions.
-Enterprise Deployment and Compliance
-Designed for industry professionals, regulatory bodies, and transit operators, the WAD18 Rail Sentinel provides comprehensive auditability, zero-dependency backend execution, and cryptographic verification to satisfy the most stringent safety-critical standards in modern transportation infrastructure.
-Author & Institutional Attribution
- * Name: Michael Aaron Russell
- * ORCID: 0009-0001-3360-6709
- * Affiliation: Universal Standard Axiom Corporation (USAC) / Advanceer IVS LLC / Foundation for Aligned Intelligence, Truth, and Humanity (FAITH)
+## Modules
 
+| Module | Purpose |
+|---|---|
+| `wad18.py` | Integer fixed-point arithmetic (10^18 scale): add, subtract, multiply, divide, rounding rules |
+| `r3.py` | Russell Recursive Refinement: iterative state checking against safety invariants |
+| `braking.py` | Braking calculations and enforced operating limits |
+| `ledger.py` | Append-only, hash-chained record of inputs, decisions, and faults |
+
+## Safety Invariants
+
+List each invariant the code enforces, for example:
+
+| ID | Invariant | Enforced in |
+|----|-----------|-------------|
+| INV-1 | `<e.g. computed braking distance <= available distance minus margin>` | `braking.py` |
+| INV-2 | `<e.g. speed never exceeds the segment limit>` | `braking.py` |
+| INV-3 | `<e.g. ledger chain verifies end to end>` | `ledger.py` |
+
+## Getting Started
+
+Requires Python `<version>`. There are no third-party dependencies.
+
+```bash
+git clone <repo-url>
+cd <repo>
+python -m unittest discover tests
+```
+
+### Example
+
+```python
+# <minimal working example: build inputs, run a braking decision, verify the ledger>
+```
+
+## Determinism
+
+- All arithmetic uses Python integers, with rounding rules documented in `wad18.py`.
+- Integer arithmetic removes floating-point drift. It does not remove sensor error, model error, or specification error.
+- Reproducibility is tested by `<test name>`, which replays recorded inputs and compares the outputs and ledger hashes.
+
+## Status and Limitations
+
+- **Not certified.** This software has not been assessed under EN 50126/50128/50129, IEC 61508, or any other railway safety standard, and has no assigned SIL.
+- **Not for operational use.** It must not control live braking or signalling.
+- **Braking models are simplified.** `<describe the physics model and its assumptions>`
+- **Test coverage:** `<state what is tested and what is not>`
+- **Hardware and timing:** real-time behavior, sensor validation, and fail-safe hardware interfaces are out of scope.
+
+## Roadmap
+
+- [ ] Documented invariant list with a test for each
+- [ ] Property-based and fault-injection tests
+- [ ] Independent review of the braking model
+- [ ] Standards gap analysis (EN 50128 / IEC 61508)
+- [ ] Additional transportation modules beyond rail
+
+## Citation
+
+```
+Russell, M. A. RUAX-CAI Transportation (WAD18 Rail Sentinel). ORCID 0009-0001-3360-6709.
+```
+
+## Author and Affiliation
+
+Michael Aaron Russell. Affiliations: Universal Standard Axiom Corporation (USAC), Advanceer IVS LLC, Foundation for Aligned Intelligence, Truth, and Humanity (FAITH).
+
+## License
+
+`<license>`
